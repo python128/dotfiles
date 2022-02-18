@@ -1,0 +1,3 @@
+
+
+    set-option global plug_install_dir "%sh{ echo $HOME/.kak-plugins }"

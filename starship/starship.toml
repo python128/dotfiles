@@ -1,0 +1,21 @@
+format = '$time${custom.gdb}$all'
+scan_timeout = 100
+
+[character]
+success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
+
+[time]
+disabled = false
+style = 'bold #b3f368'
+format = '[\[$time\]]($style) '
+use_12hr = true
+
+[custom.gdb]
+command = "echo $(git describe)"
+description = "Prints the current commit hash"
+directories = [".git/"]
+style = "bold 208"
+symbol = "📦 "
+format = "[$symbol$output ]($style)"
+

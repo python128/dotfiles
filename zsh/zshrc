@@ -1,0 +1,71 @@
+cd ~
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_RUNTIME_DIR="$HOME/.runtime"
+export XDG_DATA_HOME="$HOME/.local/share"
+# ----- ZSH related
+# set umask 022 instead of 000 (problem with Ubuntu on Winows)
+umask 022
+unsetopt BG_NICE    # to not have errors when process is started in background
+
+# Enable colors and change prompt:
+autoload -U colors && colors	# Load colors
+setopt autocd		# Automatically cd into typed directory.
+stty stop undef		# Disable ctrl-s to freeze terminal.
+# from https://github.com/woefe/git-prompt.zsh
+if [[ -f "${XDG_DATA_HOME}/zsh/git-prompt.zsh/git-prompt.zsh" ]]; then
+	source "${XDG_DATA_HOME}/zsh/git-prompt.zsh/git-prompt.zsh"
+else
+    PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+fi
+
+# Load aliases and shortcuts if existent.
+[ -f "${XDG_CONFIG_HOME}/zsh/aliasrc" ] && source "${XDG_CONFIG_HOME}/zsh/aliasrc"
+#[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zshnameddirrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/zshnameddirrc"
+#[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shortcutrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shortcutrc"
+
+# Basic auto/tab complete:
+fpath=(~/.config/zsh/funcs $fpath)
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
+# autoload -U skak gc rged
+
+# ----- my EXPORTS
+export no_proxy="localhost, 127.0.0.1, 127.0.1.1"
+
+export PYTHONSTARTUP=~/.pythonrc
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules,.ccls-cache,.cache}/*" 2> /dev/null'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+#bind -x '"\C-p": vim $(fzf);'
+
+# vim using XDG dirs
+export VIMINIT='source $XDG_CONFIG_HOME/vim/vimrc'
+
+# Adding wsl-open as a browser for Artix Linux
+if [[ "$(uname -r)" =~ "(m|M)icrosoft" ]]; then
+    if [[ -z "$BROWSER" ]]; then
+      export BROWSER="wsl-open"
+    else
+	    if ! [[ "$BROWSER" =~ "wsl-open" ]]; then
+    	  export BROWSER="$BROWSER:wsl-open"
+    	fi
+    fi
+fi
+
+. "$HOME/.cargo/env"
+
+export EDITOR=hx
+export TERM=xterm-256color
+export HELIX_RUNTIME="$XDG_CONFIG_HOME/helix/runtime"
+export PATH=$PATH:$HOME/.local/bin
+export DISPLAY=$(ip route | grep default | cut -d' ' -f3):0.0
+export PASSWD="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"
+
+source /home/nexinov/.config/broot/launcher/bash/br
+
+eval "$(starship init zsh)"
+source /home/nexinov/repos/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

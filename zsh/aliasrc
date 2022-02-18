@@ -1,0 +1,21 @@
+# Normal Aliases
+alias ls="exa"
+alias la="exa -a"
+alias c="clear"
+alias mux="tmux attach"
+alias ...="cd ../.."
+alias ..="cd .."
+alias cls="c && ls"
+alias install-hx="~/files/shell/install-hx"
+alias cmd="cmd.exe"
+
+# Git Aliases
+alias gd="git diff | bat"
+alias gl="git log | bat"
+alias gs="git status"
+alias gc="git commit -a -m"
+alias ga="git add"
+alias gb="git branch"
+alias gdb="git describe"
+
+# On the Fly added Aliases.
